@@ -1,0 +1,90 @@
+a CONTROLLER is mainly used for http requests 
+receives requests - calls the database or services - returns responses
+
+a ENDPOINT CLASS 
+its one big controller with alot of methods, you create one class per use case for example:
+
+GetTicketsEndpoint.cs
+CreateTicketEndpoint.cs
+ResolveTicketEndpoint.cs
+
+each class does one thing, is easy to test, and easy to reason. meaning much cleaner and structured code.
+
+
+this helps us understand:
+- speration of concerns
+- dependency injection
+- scalable architecture
+- real-world backend patterns
+
+
+
+DbContext us the class that manages the connection to the database and translates c# queries into sql
+then translates sql back into c# objects
+
+manages the data connection lifecycle
+and tracks entities (whats changed or has been updated)
+
+
+
+building controllers and endpoint classes, is mainly a way to structure the app itself in a well organized way.
+
+controllers are like the routers on express and node. they only handle the http request and response
+controllers handles the routes, calls Dbcontext(which translates C# code to sql to back to c# objects
+
+Browser / Frontend
+        ↓
+   Controller
+        ↓
+    DbContext
+        ↓
+   SQL Server
+   
+   
+   
+   
+   THESE ARE BASICALLY THE SAME IDEA BUT DIFFERENT PACKAGING
+   app.MapGet("/api/tickets", async (HelpDeskTicketsDbContext db) => { ... });
+   
+   [HttpGet]
+   public async Task<IActionResult> GetTickets() { ... }
+   
+   
+   DEPENDENCY INJECTION
+   Controller DI (constructor injection):
+   async (HelpDeskTicketsDbContext db) =>
+
+   public class TicketsController
+   {
+       private readonly HelpDeskTicketsDbContext _db;
+   
+       public TicketsController(HelpDeskTicketsDbContext db)
+       {
+           _db = db;
+       }
+   }
+   
+   Same DbContext
+   Same DI container
+   Just injected once per request instead of per method
+   
+   
+   ENDPOINT CLASSES
+   controllers shouldnt get to big, so the logic is furtherly split.
+   endpoint are seens as business logic for one action
+   
+   Controllers/
+    └─ TicketsController.cs
+   
+   Endpoints/
+    ├─ GetTicketsEndpoint.cs
+    ├─ CreateTicketEndpoint.cs
+    └─ ResolveTicketEndpoint.cs
+    
+    these endpoints do one thing, can be tested alone and they keep controllers small
+    
+    
+    
+    learning endpoint and classes helps understand the seperation of concerns, 
+    maintainable architecture( which is very useful for system design and architecture)
+    and real production patterns; which is how most entrerprises apps are made

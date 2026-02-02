@@ -1,0 +1,4 @@
+dto means data transfer objects which is a safe input shape for our api
+
+we dont want dtos, it prevents things like post requests  like if , createdat, resolvedat.
+

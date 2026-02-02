@@ -1,4 +1,6 @@
 using HelpDeskTickets.WebApi.Data;
+using HelpDeskTickets.WebApi.Endpoints;
+using HelpDeskTickets.WebApi.Endpoints;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -16,6 +18,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 //NOTE: program.cs is not where business lodic should live, similar to react how each handler, route, and page should be in its own file or folder
 builder.Services.AddControllers();
+builder.Services.AddScoped<GetTicketsEndpoint>();
+//scoped mean one per request
+// then we update the controller to use the endpoint
+builder.Services.AddScoped<CreateTicketEndpoint>();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -24,7 +30,17 @@ builder.Services.AddDbContext<HelpDeskTicketsDbContext>(options =>
 
 builder.Services.AddOpenApi();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("local-ui", policy =>
+        policy.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+});
+
 var app = builder.Build();
+
+app.UseCors("local-ui");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

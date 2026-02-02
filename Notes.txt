@@ -25,6 +25,8 @@ then translates sql back into c# objects
 manages the data connection lifecycle
 and tracks entities (whats changed or has been updated)
 
+controllers handles http routes, status codes, requests and responses
+endpoint classes handles one use case and should not care about http details
 
 
 building controllers and endpoint classes, is mainly a way to structure the app itself in a well organized way.

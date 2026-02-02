@@ -1,0 +1,29 @@
+endpoints classes are just c# classes that does one job
+like getting data, creating, updating
+
+
+each class has one responsibility, can be reusable, can be tested, and does not know about http
+
+
+so comparing javascript to c#
+ controllers = express route
+ endpoint class = js function
+ dbcontext = db client
+ 
+ 
+ 
+ set up flow when get request is called
+ controllers: 
+ - recieves http request
+ - calls endpoint class
+ 
+ endpoint class:
+ - uses Dbcontext 
+ - fetches tickets
+ - applies logic and returns data
+ 
+ contoller: 
+ -wraps data in 200 OK
+ - sends JSON
+ 
+ 

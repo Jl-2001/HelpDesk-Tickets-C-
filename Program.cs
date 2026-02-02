@@ -15,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 //NOTE: program.cs is not where business lodic should live, similar to react how each handler, route, and page should be in its own file or folder
-
+builder.Services.AddControllers();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -34,16 +34,17 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.MapControllers();
 
-app.MapGet("/api/tickets", async (HelpDeskTicketsDbContext db) =>
-{
-    var tickets = await db.Tickets
-        .AsNoTracking()
-        .OrderByDescending(t => t.CreatedAt)
-        .ToListAsync();
+//app.MapGet("/api/tickets", async (HelpDeskTicketsDbContext db) =>
+//{
+  //  var tickets = await db.Tickets
+   //     .AsNoTracking()
+   //     .OrderByDescending(t => t.CreatedAt)
+   //     .ToListAsync();
 
-    return Results.Ok(tickets);
-});
+//    return Results.Ok(tickets);
+//});
 
 app.Run();
 

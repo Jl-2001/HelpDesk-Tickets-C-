@@ -1,0 +1,39 @@
+http should be handled in one place
+business logic should live somewhere else
+
+
+SEPERATE THESE INTO LAYERS:
+
+HTTP stuff        → Controller
+App logic         → Endpoint class
+Database access   → DbContext
+
+a controller is the place where https requests enter the app
+url, http method, and decides the status codes
+
+Browser → Controller → (someone else does the work)
+
+
+ENDPOINT CLASS:
+this does one specific action in the system
+(kind of like a CRUD operation or design)
+
+EACH CLASS ANSWERS ONE BUSINESS QUESTION
+EXAMPLE:
+
+Controller: "I need tickets"
+Endpoint:   "I know how to get tickets"
+DbContext: "Here’s the data"
+
+the endpoint class talks to the Dbcontext, applies rules like sorting and filtering,
+and returns data to the controller.
+
+
+1. Controller receives HTTP request
+2. Controller calls GetTicketsEndpoint
+3. Endpoint uses DbContext to query DB
+4. Endpoint returns list of tickets
+5. Controller wraps it in HTTP response (200 OK)
+
+
+A controller is NOT responsible for business logic or database rules.

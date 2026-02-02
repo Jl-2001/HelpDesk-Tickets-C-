@@ -1,0 +1,9 @@
+injecting the dbcontext into the controller allows asp.net manage it for us, by repeating
+the set up code. and makes the endpoints reusable and reliable while also keeping it safe 
+per request.
+
+so in summary, it is 
+-faster to write
+-less repetetive
+- safer and easier to test
+

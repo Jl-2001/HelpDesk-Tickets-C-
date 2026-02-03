@@ -10,8 +10,9 @@ public class HelpDeskTicketsDbContext : DbContext
         : base(options)
     {
     }
-    public DbSet<Ticket> Tickets => Set<Ticket>();
-
+    
+    public DbSet<Ticket> Tickets { get; set; }
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Ticket>().ToTable("Tickets", "dbo");

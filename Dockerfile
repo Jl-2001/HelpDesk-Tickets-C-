@@ -1,14 +1,16 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.o AS build
-WORKDIR /app
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
 
-COPY *.csproj ./
-RUN dotnet publish -c Release -o out
+COPY HelpDeskTickets.WebApi.csproj ./
+RUN dotnet restore ./HelpDeskTickets.WebApi.csproj
+
+COPY . ./
+RUN dotnet publish ./HelpDeskTickets.WebApi.csproj -c Release -o /app/out
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
-COPY --from=build /app/out .
+COPY --from=build /app/out ./
 
-ENV ASPNETCORE_URLS=http://+:5127
 EXPOSE 5127
-
-ENTRYPOINT ["dotnet", "HelpDeskTickets.WebAp.dll"]
+ENV ASPNETCORE_URLS=http://+:5127
+ENTRYPOINT ["dotnet", "HelpDeskTickets.WebApi.dll"]

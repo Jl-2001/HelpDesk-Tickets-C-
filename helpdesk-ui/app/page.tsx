@@ -101,38 +101,56 @@ export default function Home() {
   }
   
   return (
-    <main style={{padding: "2rem"}}>
-      <h1>Help Desk Tickets</h1>
+    <main style={{ fontFamily: "system-ui", padding: 24, maxWidth: 950, margin: "0 auto" }}>
+      <header>
+        <div>
+          <h1 style={{ margin: 0 }}>Help Desk Tickets</h1>
+            <p style={{ margin: "6px 0 0", color: "#555" }}>
+              C# get and post requests example
+            </p>
+        </div>
+        
+        <button onClick={fetchTickets} disabled={loading} style={btnSecondary}>
+          {loading ? "refreshing..." : "refresh"}
+        </button>
+      </header>
+
+      {error && (
+          <div style={errorBox}>
+            <strong>Error:</strong> {error}
+          </div>
+      )}
       
-      <section style={{ border: "1px solid #ddd", padding: "1rem", borderRadius: 8 }}>
+      
+      <section style={{ display: "grid", gap: 16, gridTemplateColumns: "1fr 2fr", marginTop: 18 }}>
+        <div style={card}>
         <h2 style={{ marginTop: 0 }}> Create Ticket</h2>
         
-        <div>
-          <label>
+        
+          <label style={label}>
             Title
             <input
-                style={{ width: "100%", padding: 8, marginTop: 4 }}
+                style={input}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g. VPN not connecting"
             />
           </label>
-          <label>
+          
+          <label style={label}>
             Description
             <textarea
-                style={{ width: "100%", padding: 8, marginTop: 4 }}
+                style={{ ...input, height: 90, resize: "vertical" }}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="optional details..."
-                rows={3}
             />
           </label>
           
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-            <label>
+            <label style={label}>
               category
               <select 
-                  style={{ width: "100%", padding: 8, marginTop: 4 }}
+                  style={input}
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}>
                 <option>Hardware</option>
@@ -142,78 +160,143 @@ export default function Home() {
               </select>
             </label>
             
-            <label>Priority
+            <label style={label}>
+              Priority
               <select
-                  style={{ width: "100%", padding: 8, marginTop: 4 }}
-                  value={category}
+                  style={input}
+                  value={priority}
                   onChange={(e) => setPriority(e.target.value)}>
                 <option>Low</option>
                 <option>Medium</option>
                 <option>High</option>
               </select>
             </label>
+          
+            <button
+              onClick={createTicket}
+              disabled={submitting}
+              style={btnPrimary}
+            >
+              {submitting ? "creating...": "create ticket"}
+            </button>
           </div>
           
-          <button
-            onClick={createTicket}
-            disabled={submitting}
-            style={{
-              padding: "10px 14px",
-              cursor: submitting ? "not-allowed" : "pointer"
-            }}
-          >
-            {submitting ? "creating...": "create ticket"}
-          </button>
+          <div style={card}>
+            <h2 style={{ marginTop: 0 }}>Tickets</h2>
+            {loading ? (
+                <p>Loading tickets...</p>
+            ) : (
+                <div style={{ overflowX: "auto", marginTop: 10 }}>
+                  <table style={table}>
+                    <thead>
+                    <tr>
+                      <th style={th}>Title</th>
+                      <th style={th}>Category</th>
+                      <th style={th}>Priority</th>
+                      <th style={th}>Status</th>
+                      <th style={th}>Created</th>
+                    </tr>
+                    </thead>
 
-          {error && (
-              <p style={{ color: "crimson", margin: 0 }}>
-                {error}
-              </p>
-          )}
-        </div>
-      </section>
-      
-      <section style={{ color: "crimson", margin: 0 }}>
-        
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <h2 style={{ margin: 0 }}>Ticket</h2>
-          <button onClick={fetchTickets} disabled={loading} style={{ padding: "8px 12px"}}>
-            {loading ? "refreshing...": "refresh"}
-          </button>
-        </div>
-        
-        
-      {loading && <p>loading tickets</p>}
-        {!loading && tickets.length === 0 && <p>no tickets yet</p>}
-
-      {!loading && tickets.length > 0 &&(
-          <div style={{ overflowX: "auto", marginTop: 10 }}>
-          <table width="100%" border={1} cellPadding={8} style={{ borderCollapse: "collapse" }}>
-            <thead>
-            <tr>
-              <th>Title</th>
-              <th>Category</th>
-              <th>Priority</th>
-              <th>Status</th>
-              <th>Created</th>
-            </tr>
-            </thead>
-            
-            <tbody>
-            {tickets.map(ticket => (
-                <tr key={ticket.id}>
-                  <td>{ticket.title}</td>
-                  <td>{ticket.category}</td>
-                  <td>{ticket.priority}</td>
-                  <td>{ticket.status}</td>
-                  <td>{new Date(ticket.createdAt).toLocaleDateString()}</td>
-                </tr>
-            ))}
-            </tbody>
-          </table>
+                    <tbody>
+                    {tickets.map((t) => (
+                        <tr key={t.id}>
+                          <td style={td}>{t.id}</td>
+                          <td style={td}>
+                            <div style={{ fontWeight: 600 }}>{t.title}</div>
+                            {t.description && (
+                                <div style={{ color: "#666", fontSize: 12, marginTop: 2 }}>
+                                  {t.description}
+                                </div>
+                            )}
+                          </td>
+                          <td style={td}>{t.category}</td>
+                          <td style={td}>{t.priority}</td>
+                          <td style={td}>{t.status}</td>
+                          <td style={td}>{new Date(t.createdAt).toLocaleDateString()}</td>
+                        </tr>
+                    ))}
+                    </tbody>
+                  </table>
+                  {tickets.length === 0 && <p>No Title</p>}
+                </div> 
+            )}
           </div>
-      )}
       </section>
       </main>
   );
 }
+
+const card: React.CSSProperties = {
+  background: "white",
+  border: "1px solid #e5e5e5",
+  borderRadius: 10,
+  padding: 16,
+  boxShadow: "0 1px 6px rgba(0,0,0,0.06)"
+};
+
+const label: React.CSSProperties = {
+  display: "block",
+  fontSize: 13,
+  marginBottom: 10,
+  color: "#333"
+};
+
+const input: React.CSSProperties = {
+  width: "100%",
+  marginTop: 6,
+  padding: "10px 10px",
+  borderRadius: 8,
+  border: "1px solid #ddd",
+  outline: "none"
+};
+
+const btnPrimary: React.CSSProperties = {
+  width: "100%",
+  marginTop: 8,
+  padding: "10px 12px",
+  borderRadius: 10,
+  border: "none",
+  background: "#111",
+  color: "white",
+  fontWeight: 600,
+  cursor: "pointer"
+};
+
+const btnSecondary: React.CSSProperties = {
+  padding: "10px 12px",
+  borderRadius: 10,
+  border: "1px solid #ddd",
+  background: "white",
+  color: "black",
+  cursor: "pointer"
+};
+
+const errorBox: React.CSSProperties = {
+  marginTop: 14,
+  padding: 12,
+  borderRadius: 10,
+  border: "1px solid #f5c2c7",
+  background: "#f8d7da",
+  color: "#842029"
+};
+
+const table: React.CSSProperties = {
+  width: "100%",
+  borderCollapse: "collapse"
+};
+
+const th: React.CSSProperties = {
+  textAlign: "left",
+  fontSize: 12,
+  color: "#668",
+  padding: "10px 8px",
+  borderBottom: "1px solid #eee"
+};
+
+const td: React.CSSProperties = {
+  padding: "10px 8px",
+  borderBottom: "1px solid #f2f2f2",
+  color: "#668",
+  verticalAlign: "top"
+};

@@ -1,13 +1,27 @@
 ﻿version: "3.0"
 
 services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: helpdesk-db
+    environment:
+      SA_PASSWORD: DevPassword_2026!
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+
   api:
     build:
       context: ./HelpDeskTickets.WebApi
     ports:
       - "5127:5127"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: Server=db;Database=HelpDeskTicketsDB;User Id=sa;Password=DevPassword_2026!;TrustServerCertificate=True
+    depends_on:
+      - db
 
   web:
     build:
@@ -15,6 +29,9 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_BASE=http://api:5127
+      NEXT_PUBLIC_API_BASE: http://localhost:5127
     depends_on:
       - api
+
+volumes:
+  sql_data:

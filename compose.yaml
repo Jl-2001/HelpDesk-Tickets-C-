@@ -1,0 +1,20 @@
+﻿version: "3.0"
+
+services:
+  api:
+    build:
+      context: ./HelpDeskTickets.WebApi
+    ports:
+      - "5127:5127"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  web:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_BASE=http://api:5127
+    depends_on:
+      - api

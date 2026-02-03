@@ -190,6 +190,7 @@ export default function Home() {
                   <table style={table}>
                     <thead>
                     <tr>
+                      <th style={th}>ID</th>
                       <th style={th}>Title</th>
                       <th style={th}>Category</th>
                       <th style={th}>Priority</th>

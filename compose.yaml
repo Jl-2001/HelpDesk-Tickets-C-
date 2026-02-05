@@ -3,7 +3,7 @@
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: helpdesk-db
     environment:
-      SA_PASSWORD: Zumiezlover47!
+      SA_PASSWORD: ${SA_PASSWORD}
       ACCEPT_EULA: "Y"
     ports:
       - "1433:1433"
@@ -17,7 +17,7 @@
       - "5127:5127"
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ConnectionStrings__DefaultConnection: Server=db;Database=HelpDeskTicketsDB;User Id=sa;Password=Zumiezlover47!;TrustServerCertificate=True
+      ConnectionStrings__DefaultConnection: ${DB_CONNECTION}
     depends_on:
       - db
 

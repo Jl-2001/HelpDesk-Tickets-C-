@@ -14,11 +14,13 @@ public class TicketController : ControllerBase
 {
     private readonly GetTicketsEndpoint _getTickets;
     private readonly CreateTicketEndpoint _createTicket;
+    private readonly UpdateTicketEndpoint _updateTicket;
 
-    public TicketController(GetTicketsEndpoint getTickets, CreateTicketEndpoint createTicket)
+    public TicketController(GetTicketsEndpoint getTickets, CreateTicketEndpoint createTicket, UpdateTicketEndpoint updateTicket)
     {
         _getTickets = getTickets;
         _createTicket = createTicket;
+        _updateTicket = updateTicket;
     }
     // this is a contructor injestion which asp.net sees ticketcontroller.
     // it see the constructor needs getTicketsEndpoints, it looks in the DI container,
@@ -53,6 +55,29 @@ public class TicketController : ControllerBase
         {
             return BadRequest(new { error = ex.Message });
         }
+    }
+
+
+    [HttpPatch("{id:int}")]
+    public async Task<IActionResult> UpdateTicket(
+        int id, 
+        [FromBody] UpdateTicketDto dto)
+    {
+
+        try
+        {
+            var updated = await _updateTicket.ExecuteAsync(id, dto);
+
+            if (updated == null)
+                return NotFound();
+
+            return Ok(updated);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+        
     }
 
 }

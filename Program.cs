@@ -1,6 +1,5 @@
 using HelpDeskTickets.WebApi.Data;
 using HelpDeskTickets.WebApi.Endpoints;
-using HelpDeskTickets.WebApi.Endpoints;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -22,6 +21,8 @@ builder.Services.AddScoped<GetTicketsEndpoint>();
 //scoped mean one per request
 // then we update the controller to use the endpoint
 builder.Services.AddScoped<CreateTicketEndpoint>();
+
+builder.Services.AddScoped<UpdateTicketEndpoint>();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

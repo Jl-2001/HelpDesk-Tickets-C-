@@ -26,4 +26,8 @@ so comparing javascript to c#
  -wraps data in 200 OK
  - sends JSON
  
- 
+ TO START APP DO THE FOLLOWING:
+ - docker compose up -d db
+ - dotnet run
+ navigate to the helpdesk ui 
+ -npm run dev

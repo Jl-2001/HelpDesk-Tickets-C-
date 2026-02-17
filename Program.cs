@@ -24,6 +24,8 @@ builder.Services.AddScoped<CreateTicketEndpoint>();
 
 builder.Services.AddScoped<UpdateTicketEndpoint>();
 
+builder.Services.AddScoped<GetTicketByIdEndpoint>();
+
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddDbContext<HelpDeskTicketsDbContext>(options =>

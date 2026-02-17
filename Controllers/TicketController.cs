@@ -15,12 +15,14 @@ public class TicketController : ControllerBase
     private readonly GetTicketsEndpoint _getTickets;
     private readonly CreateTicketEndpoint _createTicket;
     private readonly UpdateTicketEndpoint _updateTicket;
+    private readonly GetTicketByIdEndpoint _getTicketById;
 
-    public TicketController(GetTicketsEndpoint getTickets, CreateTicketEndpoint createTicket, UpdateTicketEndpoint updateTicket)
+    public TicketController(GetTicketsEndpoint getTickets, CreateTicketEndpoint createTicket, UpdateTicketEndpoint updateTicket, GetTicketByIdEndpoint getTicketById)
     {
         _getTickets = getTickets;
         _createTicket = createTicket;
         _updateTicket = updateTicket;
+        _getTicketById = getTicketById;
     }
     // this is a contructor injestion which asp.net sees ticketcontroller.
     // it see the constructor needs getTicketsEndpoints, it looks in the DI container,
@@ -41,6 +43,19 @@ public class TicketController : ControllerBase
 //this delegates the work
 
 // then wraps the data in http 200 and json response
+
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetTicketById(int id)
+    {
+        var ticket = await _getTicketById.ExecuteAsync(id);
+
+        if (ticket == null)
+        {
+            return NotFound();
+        }
+        
+        return Ok(ticket);
+    }
 
 
     [HttpPost]

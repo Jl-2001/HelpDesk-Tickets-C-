@@ -1,5 +1,6 @@
 "use client";
 import {useEffect, useState} from "react";
+import Link from "next/link";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:5127";
 
@@ -203,8 +204,9 @@ export default function Home() {
                     {tickets.map((t) => (
                         <tr key={t.id}>
                           <td style={td}>{t.id}</td>
+                          
                           <td style={td}>
-                            <div style={{ fontWeight: 600 }}>{t.title}</div>
+                            <div style={{ fontWeight: 600 }}><Link href={`/tickets/${t.id}`}>{t.title}</Link></div>
                             {t.description && (
                                 <div style={{ color: "#666", fontSize: 12, marginTop: 2 }}>
                                   {t.description}

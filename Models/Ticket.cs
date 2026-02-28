@@ -10,6 +10,7 @@ public class Ticket
     public string Status { get; set; } = "";
     public DateTime CreatedAt { get; set; }
     public DateTime? ResolvedAt { get; set; }
+    public List<TicketComment> Comments { get; set; } = new();
 }
 
 

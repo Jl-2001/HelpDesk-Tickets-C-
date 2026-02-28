@@ -12,11 +12,23 @@ public class HelpDeskTicketsDbContext : DbContext
     }
     
     public DbSet<Ticket> Tickets { get; set; }
+    public DbSet<TicketComment> Comments {get; set;}
+
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Ticket>().ToTable("Tickets", "dbo");
+    
+        modelBuilder.Entity<Ticket>().ToTable("Tickets", "dbo");
+        modelBuilder.Entity<TicketComment>().ToTable("Comments", "dbo");
+
+        modelBuilder.Entity<TicketComment>()
+            .HasOne(c => c.Ticket)
+            .WithMany(t => t.Comments)
+            .HasForeignKey(c => c.TicketId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
+    
 }
 
 // this file is used to translate the database which is pretty important

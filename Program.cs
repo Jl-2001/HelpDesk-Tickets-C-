@@ -1,4 +1,5 @@
 using HelpDeskTickets.WebApi.Data;
+using HelpDeskTickets.WebApi.Dtos;
 using HelpDeskTickets.WebApi.Endpoints;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -25,6 +26,8 @@ builder.Services.AddScoped<CreateTicketEndpoint>();
 builder.Services.AddScoped<UpdateTicketEndpoint>();
 
 builder.Services.AddScoped<GetTicketByIdEndpoint>();
+builder.Services.AddScoped<CreateCommentEndpoint>();
+builder.Services.AddScoped<GetCommentByTicketIdEndpoint>();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -59,6 +62,25 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.MapPut("/api/tickets/{id:int}", async (
+        int id,
+        UpdateTicketDto dto,
+        UpdateTicketEndpoint endpoint) =>
+    {
+       var updated = await endpoint.ExecuteAsync(id, dto);
+
+       return updated is null ? Results.NotFound() : Results.Ok(updated);
+    });
+;
+
+app.MapPost("/api/tickets/{ticketId:int}/comments",
+    async (int ticketId, CreateCommentDto dto, CreateCommentEndpoint endpoint) =>
+        await endpoint.ExecuteAsync(ticketId, dto));
+
+app.MapGet("/api/tickets/{ticketId:int}/comments",
+    async (int ticketId, GetCommentByTicketIdEndpoint endpoint) =>
+        await endpoint.ExecuteAsync(ticketId));
 
 app.UseHttpsRedirection();
 

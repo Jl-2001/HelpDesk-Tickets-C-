@@ -29,48 +29,39 @@ public class UpdateTicketEndpoint
         if (stringStatus != null )
         {
             if (string.IsNullOrWhiteSpace(stringStatus))// we always check the cleaned value.
-            {
-                throw new ArgumentException("update the status, cant be empty");
-            }
-            else
-            {
-                ticket.Status = stringStatus;
-                if (stringStatus.Equals("Resolved", StringComparison.OrdinalIgnoreCase))
-                {
-                    ticket.ResolvedAt = DateTime.UtcNow;
-                }
-                else
-                {
-                    ticket.ResolvedAt = null;
-                }
-
-            }
             
+                throw new ArgumentException("update the status, cant be empty");
+            
+                ticket.Status = stringStatus;
+
+                ticket.ResolvedAt = stringStatus.Equals("Resolved", StringComparison.OrdinalIgnoreCase)
+                    ? DateTime.UtcNow
+                    : null;
+
+
+
         }
         // patch should be this:
         //Validate - Assign - Continue - Save at the end - Return at the end
+        
         if (stringPriority != null)
         {
             if (string.IsNullOrWhiteSpace(stringPriority))
-            {
+            
                 throw new ArgumentException("update the priority, cant be empty");
-            }
-            else
-            {
+            
                 ticket.Priority = stringPriority;
-            }
+            
         }
-
+    
         if (stringCategory != null)
         {
             if (string.IsNullOrWhiteSpace(stringCategory))
-            {
+            
                 throw new ArgumentException("update the category, cant be empty");
-            }
-            else
-            {
+            
                 ticket.Category = stringCategory;
-            }
+            
         }
         
 

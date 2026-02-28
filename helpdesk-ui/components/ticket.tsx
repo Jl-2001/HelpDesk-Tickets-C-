@@ -35,18 +35,61 @@ export default function TicketView({ ticket }: { ticket: Ticket }) {
             </div>
                 
             
-            <div>
-                <label style={label}>
-                    Comments
-                    <textarea
-                        placeholder="optional details..."
-                    />
-                </label>
-                
+            <div style={{marginTop: 16,
+                border: "1px solid #2a2a2a",
+                borderRadius: 12,
+                padding: 16,
+                background: "#0f0f0f"}}>
+               <h4>Comments</h4>
 
+                <div style={{
+                    border: "1px solid #333",
+                    borderRadius: 10,
+                    padding: 12,
+                    marginBottom: 8,
+                    background: "#151515"
+                }}>
+                    <p style={{ margin: 0, color: "#e5e5e5" }}>
+                        my vpn is not connecting or holding connection longer than 10 seconds
+                    </p>
+
+                    <span style={{
+                        fontSize: 12,
+                        color: "#9ca3af"
+                    }}>
+                    Feb 5, 7:41 PM
+                  </span>
+                </div>
+            </div>
+            <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
+                  <textarea
+                      placeholder="Add a comment..."
+                      style={{
+                          flex: 1,
+                          borderRadius: 10,
+                          border: "1px solid #333",
+                          padding: 10,
+                          background: "#111",
+                          color: "white",
+                          minHeight: 60,
+                          resize: "vertical"
+                      }}
+                  />
+
+                        <button style={{
+                            padding: "8px 14px",
+                            borderRadius: 10,
+                            border: "1px solid #444",
+                            background: "#111",
+                            color: "white",
+                            cursor: "pointer"
+                        }}>
+                            Add
+                        </button>
             </div>
             {/* Later: notes/comments UI goes here */}
         </div>
+        
     );
 }
 

@@ -30,7 +30,7 @@ export default function Page() {
     const [ticket,setTicket] = useState<Ticket | null>(null);
     const [loading,setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [updating, setUpdating] = useState(false);
+    const [updatedTicket, setUpdatedTicket] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
 
 
@@ -66,7 +66,7 @@ export default function Page() {
         if (!id) return;
         
         try {
-            setUpdating(true);
+            setUpdatedTicket(true);
             setError(null);
             
             const res = await fetch(`${API_BASE}/api/tickets/${id}`,{
@@ -87,7 +87,7 @@ export default function Page() {
         } catch (err: any) {
             setError(err?.message ?? "failed to update ticket")
         } finally {
-            setUpdating(false);
+            setUpdatedTicket(false);
         }
     }
 
@@ -146,16 +146,16 @@ export default function Page() {
 */}
                 <button
                     onClick={handleResolve}
-                    disabled={updating}
+                    disabled={updatedTicket}
                     style={{
                         padding: "8px 14px",
                         borderRadius: 8,
                         border: "1px solid #444",
-                        cursor: updating ? "not-allowed" : "pointer",
-                        opacity: updating ? 0.6 : 1,
+                        cursor: updatedTicket ? "not-allowed" : "pointer",
+                        opacity: updatedTicket ? 0.6 : 1,
                     }}
                 >
-                    {updating ? "Currnetly Resolving..." : "Mark Resolved"}
+                    {updatedTicket ? "Currnetly Resolving..." : "Mark Resolved"}
                 </button>
             </div>
             <TicketView ticket={ticket} />
@@ -163,7 +163,9 @@ export default function Page() {
 
                 <UpdateTicketModal
                 open={isEditOpen}
-                onClose={()=> setIsEditOpen(false)}
+                ticket={ticket}
+                onUpdated={(t) => setTicket(t)}
+                onClose={() => setIsEditOpen(false)}
                 />
         </div>
     );

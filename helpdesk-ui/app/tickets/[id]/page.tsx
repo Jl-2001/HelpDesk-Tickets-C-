@@ -18,6 +18,14 @@ type Ticket = {
     resolvedAt?: string | null;
 };
 
+type TicketComment = {
+    id: number;
+    ticketId: number;
+    body: string;
+    createdAt: string;
+    updatedAt?: string | null;
+}
+
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:5217";
 
 
@@ -32,6 +40,12 @@ export default function Page() {
     const [error, setError] = useState<string | null>(null);
     const [updatedTicket, setUpdatedTicket] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
+
+    //tickets comments
+    const [comments, setComments] = useState<TicketComment[]>([]);
+    const [newComment, setNewComment] = useState("");
+    const [commentsLoading, setCommentsLoading] = useState(false);
+    const [postingComment, setPostingComment] = useState(false);
 
 
 
@@ -88,6 +102,60 @@ export default function Page() {
             setError(err?.message ?? "failed to update ticket")
         } finally {
             setUpdatedTicket(false);
+        }
+    }
+    
+    const fetchTicketComments = async () => {
+        if(!id) return;
+            try {
+                setCommentsLoading(true);
+                setError(null);
+                
+                const res = await fetch(`${API_BASE}/api/tickets/${id}/comments`);
+                if (!res.ok) {
+                    const text = await res.text();
+                    throw new Error(`GET comments failed(${res.status}): ${text}`);
+                }
+                const data: TicketComment[] = await res.json();
+                setComments(data);
+            }catch (e: any) {
+                setError(e?.message ?? "failed to load comments");
+            } finally {
+                setCommentsLoading(false);
+            }
+    };
+
+    
+    
+    useEffect(() => {
+        if(!id) return;
+        fetchTicketComments();
+    }, [id])
+    
+    const postComment = async () => {
+        if (!id) return;
+        const body = newComment.trim();
+        if (!body) return;
+        
+        try {
+            setPostingComment(true);
+            setError(null);
+            const res = await fetch(`${API_BASE}/api/tickets/${id}/comments`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ body }),
+            });
+            
+            if (!res.ok){
+                const text = await res.text();
+                throw new Error(`POST failed (${res.status}): ${text}`);
+            }
+            setNewComment("");
+            await fetchTicketComments();
+        } catch (e: any) {
+            setError(e?.message ?? "failed to load comments");
+        } finally {
+            setPostingComment(false);
         }
     }
 
@@ -158,6 +226,8 @@ export default function Page() {
                     {updatedTicket ? "Currnetly Resolving..." : "Mark Resolved"}
                 </button>
             </div>
+            
+            
             <TicketView ticket={ticket} />
 
 
@@ -167,6 +237,78 @@ export default function Page() {
                 onUpdated={(t) => setTicket(t)}
                 onClose={() => setIsEditOpen(false)}
                 />
+
+            <div
+                style={{
+                    border: "1px solid #e5e5e5",
+                    borderRadius: 10,
+                    padding: 16,
+                    marginTop: 20,
+                    minHeight: 160, 
+                }}>
+                <div style={{marginTop: 16,
+                border: "1px solid #2a2a2a",
+                borderRadius: 12,
+                padding: 16,
+                background: "#0f0f0f"}}>
+                <h4>Comments</h4>
+
+                <div style={{
+                    border: "1px solid #333",
+                    borderRadius: 10,
+                    padding: 12,
+                    marginBottom: 8,
+                    background: "#151515"
+                }}>
+                    {commentsLoading ? (
+                        <p>Loading comments</p>
+                    ) : (
+                        
+                        comments.length === 0 ? (
+                            <p>No Comments</p>
+                        ) : (
+                            comments.map((c) => (
+                                <div key={c.id}>
+                                    <p>{c.body}</p>
+                                    <span>
+                                        {new Date(c.createdAt).toLocaleString()}
+                                        {c.updatedAt ? " • Edited": ""}
+                                    </span>
+                                </div>
+                            ))
+                        )
+                        )}
+                </div>
+            </div>
+            <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
+                  <textarea
+                      placeholder="Add a comment..."
+                      value={newComment}
+                      onChange={(e) => setNewComment(e.target.value)}
+                      style={{
+                          flex: 1,
+                          borderRadius: 10,
+                          border: "1px solid #333",
+                          padding: 10,
+                          background: "#111",
+                          color: "white",
+                          minHeight: 60,
+                          resize: "vertical"
+                      }}
+                  />
+
+                <button style={{
+                    padding: "8px 14px",
+                    borderRadius: 10,
+                    border: "1px solid #444",
+                    background: "#111",
+                    color: "white",
+                    cursor: "pointer"
+                }}>
+                    Add
+                </button>
+            </div>
+            </div>
         </div>
     );
 }

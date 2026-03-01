@@ -22,6 +22,8 @@ type CreateTicketDto = {
   category: string;
   priority: string;
 }
+
+
   
 export default function Home() {
   
@@ -36,6 +38,8 @@ export default function Home() {
   
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+
   
   useEffect(() => {
     fetchTickets();

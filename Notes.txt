@@ -90,3 +90,5 @@ Browser / Frontend
     learning endpoint and classes helps understand the seperation of concerns, 
     maintainable architecture( which is very useful for system design and architecture)
     and real production patterns; which is how most entrerprises apps are made
+    
+    empty docker files can exist, use nano commmand to help create and add to it.

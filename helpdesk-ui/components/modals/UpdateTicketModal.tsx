@@ -1,13 +1,8 @@
 "use client";
 import {useState, useEffect} from "react";
+import type {Ticket} from "@/types";
 
 
-type Ticket = {
-    id: number;
-    category: string;
-    priority: string;
-    status: string;
-};
 
 
 type Props = {
@@ -32,7 +27,7 @@ export default function UpdateTicketModal({open, onClose, ticket, onUpdated}: Pr
         setStatus(ticket.status);
         setCategory(ticket.category);
         setPriority(ticket.priority);
-    }, [open, ticket])
+    }, [open, ticket.id, ticket.status, ticket.category, ticket.priority])
     
     const saveChanges = async () => {
         

@@ -1,15 +1,6 @@
 "use client";
 
-type Ticket = {
-    id: number;
-    title: string;
-    description?: string | null;
-    category: string;
-    priority: string;
-    status: string;
-    createdAt: string;
-    resolvedAt?: string | null;
-};
+import type { Ticket } from "@/types"
 
 export default function TicketView({ ticket }: { ticket: Ticket }) {
     return (
@@ -57,9 +48,3 @@ function Badge({ label }: { label: string }) {
     );
 }
 
-
-const label: React.CSSProperties = {
-    display: "block",
-    fontSize: 13,
-    marginBottom: 10,
-};

@@ -4,19 +4,10 @@ import {useEffect, useState} from "react";
 import {useParams} from "next/navigation";
 import TicketView from "@/components/Ticket";
 import UpdateTicketModal from "@/components/modals/UpdateTicketModal";
+import type { Ticket } from "@/types";
 
 
 
-type Ticket = {
-    id: number;
-    title: string;
-    description?: string | null;
-    category: string;
-    priority: string;
-    status: string;
-    createdAt: string;
-    resolvedAt?: string | null;
-};
 
 type TicketComment = {
     id: number;
@@ -47,7 +38,7 @@ export default function Page() {
     const [commentsLoading, setCommentsLoading] = useState(false);
     const [postingComment, setPostingComment] = useState(false);
 
-
+    const edited = c.updatedAt && new Date(c.updatedAt).getTime() !== new Date(c.createdAt).getTime();
 
     useEffect(() => {
         
@@ -231,7 +222,7 @@ export default function Page() {
             <TicketView ticket={ticket} />
 
 
-                <UpdateTicketModal
+            <UpdateTicketModal
                 open={isEditOpen}
                 ticket={ticket}
                 onUpdated={(t) => setTicket(t)}
@@ -254,7 +245,6 @@ export default function Page() {
                 <h4>Comments</h4>
 
                 <div style={{
-                    border: "1px solid #333",
                     borderRadius: 10,
                     padding: 12,
                     marginBottom: 8,
@@ -262,11 +252,9 @@ export default function Page() {
                 }}>
                     {commentsLoading ? (
                         <p>Loading comments</p>
+                    ) : comments.length === 0 ? (
+                            <p>No comments have been added yet.</p>
                     ) : (
-                        
-                        comments.length === 0 ? (
-                            <p>No Comments</p>
-                        ) : (
                             comments.map((c) => (
                                 <div key={c.id}
                                      style={{
@@ -279,12 +267,12 @@ export default function Page() {
                                     <p>{c.body}</p>
                                     <span>
                                         {new Date(c.createdAt).toLocaleString()}
-                                        {c.updatedAt ? " • Edited": ""}
+                                        {edited ? " • Edited": ""}
                                     </span>
                                 </div>
                             ))
                         )
-                        )}
+                        }
                 </div>
             </div>
             <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
@@ -292,6 +280,12 @@ export default function Page() {
                       placeholder="Add a comment..."
                       value={newComment}
                       onChange={(e) => setNewComment(e.target.value)}
+                      onKeyDown={(e) => {
+                          if (e.key === "Enter" && !e.shiftKey) {
+                              e.preventDefault();
+                              postComment();
+                      }
+                      }}
                       style={{
                           flex: 1,
                           borderRadius: 10,
@@ -306,6 +300,7 @@ export default function Page() {
 
                 <button 
                     onClick={postComment}
+                    disabled={postingComment || !newComment.trim()}
                     style={{
                     padding: "8px 14px",
                     borderRadius: 10,
@@ -314,7 +309,7 @@ export default function Page() {
                     color: "white",
                     cursor: "pointer"
                 }}>
-                    Add
+                    {postingComment ? "Adding...": "Add"}
                 </button>
             </div>
             </div>

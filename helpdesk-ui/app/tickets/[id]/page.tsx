@@ -268,7 +268,14 @@ export default function Page() {
                             <p>No Comments</p>
                         ) : (
                             comments.map((c) => (
-                                <div key={c.id}>
+                                <div key={c.id}
+                                     style={{
+                                         border: "1px solid #333",
+                                         borderRadius: 10,
+                                         padding: 12,
+                                         marginBottom: 8,
+                                         background: "#151515"
+                                     }}>
                                     <p>{c.body}</p>
                                     <span>
                                         {new Date(c.createdAt).toLocaleString()}
@@ -297,7 +304,9 @@ export default function Page() {
                       }}
                   />
 
-                <button style={{
+                <button 
+                    onClick={postComment}
+                    style={{
                     padding: "8px 14px",
                     borderRadius: 10,
                     border: "1px solid #444",

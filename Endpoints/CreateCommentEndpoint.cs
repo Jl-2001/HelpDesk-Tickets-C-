@@ -1,6 +1,7 @@
 using HelpDeskTickets.WebApi.Data;
 using HelpDeskTickets.WebApi.Dtos;
 using HelpDeskTickets.WebApi.Models;
+using HelpDeskTickets.WebApi.Models.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace HelpDeskTickets.WebApi.Endpoints;
@@ -28,6 +29,16 @@ public class CreateCommentEndpoint
         };
         _db.Comments.Add(comment);
         await _db.SaveChangesAsync();
-        return Results.Ok(comment);
+        var result = new TicketCommentDto
+        {
+            Id = comment.Id,
+            TicketId = comment.TicketId,
+            Body = comment.Body,
+            CreatedAt = comment.CreatedAt,
+            UpdatedAt = comment.UpdatedAt
+        };
+        
+        
+        return Results.Ok(result);
     }
 }

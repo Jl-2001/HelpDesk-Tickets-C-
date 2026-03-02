@@ -38,7 +38,6 @@ export default function Page() {
     const [commentsLoading, setCommentsLoading] = useState(false);
     const [postingComment, setPostingComment] = useState(false);
 
-    const edited = c.updatedAt && new Date(c.updatedAt).getTime() !== new Date(c.createdAt).getTime();
 
     useEffect(() => {
         
@@ -255,22 +254,31 @@ export default function Page() {
                     ) : comments.length === 0 ? (
                             <p>No comments have been added yet.</p>
                     ) : (
-                            comments.map((c) => (
-                                <div key={c.id}
-                                     style={{
-                                         border: "1px solid #333",
-                                         borderRadius: 10,
-                                         padding: 12,
-                                         marginBottom: 8,
-                                         background: "#151515"
-                                     }}>
-                                    <p>{c.body}</p>
-                                    <span>
-                                        {new Date(c.createdAt).toLocaleString()}
-                                        {edited ? " • Edited": ""}
-                                    </span>
-                                </div>
-                            ))
+                        comments.map((c) => {
+                                const edited =
+                                    !!c.updatedAt &&
+                                    new Date(c.updatedAt).getTime() !== new Date(c.createdAt).getTime();
+
+                                return (
+                                    <div
+                                        key={c.id}
+                                        style={{
+                                            border: "1px solid #333",
+                                            borderRadius: 10,
+                                            padding: 12,
+                                            marginBottom: 8,
+                                            background: "#151515",
+                                        }}
+                                    >
+                                        <p style={{ margin: 0, color: "white" }}>{c.body}</p>
+
+                                        <div style={{ marginTop: 8, fontSize: 12, opacity: 0.8 }}>
+                                            {new Date(c.createdAt).toLocaleString()}
+                                            {edited ? " • Edited" : ""}
+                                        </div>
+                                    </div>
+                                );
+                            })
                         )
                         }
                 </div>
